@@ -116,5 +116,90 @@
     <p>&copy; 2025 Raveendra Konda. All rights reserved.</p>
   </footer>
 
+  <!-- Simple Chatbot Widget -->
+<div id="chatbot-container" style="position:fixed;bottom:30px;right:30px;z-index:9999;">
+  <div id="chatbot-window" style="width:300px;height:400px;background:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.2);display:none;flex-direction:column;">
+    <div style="background:#222;color:#fff;padding:10px 15px;border-radius:10px 10px 0 0;font-weight:bold;">Ask Me</div>
+    <div id="chatbot-messages" style="flex:1;overflow-y:auto;padding:15px;font-size:15px;"></div>
+    <form id="chatbot-form" style="display:flex;border-top:1px solid #eee;">
+      <input id="chatbot-input" type="text" placeholder="Type your question..." autocomplete="off" style="flex:1;border:none;padding:10px;border-radius: 0 0 0 10px;"/>
+      <button type="submit" style="background:#222;color:#fff;border:none;padding:10px 15px;border-radius: 0 0 10px 0;cursor:pointer;">Send</button>
+    </form>
+  </div>
+  <button id="chatbot-toggle" style="background:#222;color:#fff;border:none;padding:14px 18px;border-radius:50%;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);">💬</button>
+</div>
+<script>
+  // Predefined Q&A
+  const predefinedQA = [
+    {
+      q: ["hello", "hi", "hey"],
+      a: "Hello! How can I help you today?"
+    },
+    {
+      q: ["who are you", "your name", "who is this"],
+      a: "I'm a virtual assistant for Raveendra Konda's website."
+    },
+    {
+      q: ["contact", "email", "how to reach"],
+      a: "You can contact Raveendra at <a href='mailto:raveendrakonda7@gmail.com'>raveendrakonda7@gmail.com</a>."
+    },
+    {
+      q: ["projects", "what projects", "show me projects"],
+      a: "Raveendra has worked on DevOps Bootcamp (London) and Prompt Engineering Journey. Check the Projects section for more!"
+    },
+    {
+      q: ["linkedin"],
+      a: "Here is Raveendra's LinkedIn: <a href='https://www.linkedin.com/in/raveendrakonda' target='_blank'>linkedin.com/in/raveendrakonda</a>"
+    },
+    {
+      q: ["bye", "goodbye", "thanks"],
+      a: "You're welcome! Have a great day."
+    }
+  ];
+
+  function getBotReply(input) {
+    input = input.toLowerCase();
+    for (const pair of predefinedQA) {
+      if (pair.q.some(q => input.includes(q))) {
+        return pair.a;
+      }
+    }
+    return "Sorry, I can only help with basic questions about Raveendra Konda and this website.";
+  }
+
+  // UI Logic
+  const toggleBtn = document.getElementById('chatbot-toggle');
+  const chatbotWindow = document.getElementById('chatbot-window');
+  const messagesDiv = document.getElementById('chatbot-messages');
+  const form = document.getElementById('chatbot-form');
+  const input = document.getElementById('chatbot-input');
+
+  function appendMessage(sender, text) {
+    const msg = document.createElement('div');
+    msg.style.margin = "10px 0";
+    msg.innerHTML = `<b>${sender}:</b> ${text}`;
+    messagesDiv.appendChild(msg);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  toggleBtn.onclick = () => {
+    chatbotWindow.style.display = chatbotWindow.style.display === 'flex' ? 'none' : 'flex';
+    if (chatbotWindow.style.display === 'flex' && messagesDiv.childElementCount === 0) {
+      appendMessage("Bot", "Hello! How can I help you today?");
+    }
+  };
+
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    const userText = input.value.trim();
+    if (!userText) return;
+    appendMessage("You", userText);
+    setTimeout(() => {
+      appendMessage("Bot", getBotReply(userText));
+    }, 400);
+    input.value = '';
+  };
+</script>
+  
 </body>
 </html>
