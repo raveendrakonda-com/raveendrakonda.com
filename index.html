@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+  <div id="chatgpt-search">
+  <input type="text" id="searchQuery" placeholder="Ask me anything..." />
+  <button onclick="sendToChatGPT()">Search</button>
+</div>
+<div id="chatgpt-response"></div>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -245,11 +250,7 @@ messagesDiv.appendChild(btn);
 chatbotStep = 4;
 </script>
 
-  <div id="chatgpt-search">
-  <input type="text" id="searchQuery" placeholder="Ask me anything..." />
-  <button onclick="sendToChatGPT()">Search</button>
-</div>
-<div id="chatgpt-response"></div>
+  
   
 </body>
 </html>
