@@ -244,6 +244,12 @@ btn.innerHTML = `<a href="${whatsappUrl}" target="_blank" style="display:inline-
 messagesDiv.appendChild(btn);
 chatbotStep = 4;
 </script>
+
+  <div id="chatgpt-search">
+  <input type="text" id="searchQuery" placeholder="Ask me anything..." />
+  <button onclick="sendToChatGPT()">Search</button>
+</div>
+<div id="chatgpt-response"></div>
   
 </body>
 </html>
