@@ -1,40 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
   <div id="chatgpt-search">
   <input type="text" id="searchQuery" placeholder="Ask me anything..." />
   <button onclick="sendToChatGPT()">Search</button>
 </div>
 <div id="chatgpt-response"></div>
-  <script>
-// Use the same predefinedQA array from your chatbot script
-const predefinedQA = [
-  { q: ["who are you", "your name", "who is this"], a: "I'm a virtual assistant for Raveendra Konda's website." },
-  { q: ["contact", "email", "how to reach"], a: "You can contact Raveendra at <a href='mailto:raveendrakonda7@gmail.com'>raveendrakonda7@gmail.com</a>." },
-  { q: ["projects", "what projects", "show me projects"], a: "Raveendra has worked on DevOps Bootcamp (London) and Prompt Engineering Journey. Check the Projects section for more!" },
-  { q: ["linkedin"], a: "Here is Raveendra's LinkedIn: <a href='https://www.linkedin.com/in/raveendrakonda' target='_blank'>linkedin.com/in/raveendrakonda</a>" },
-  { q: ["bye", "goodbye", "thanks"], a: "You're welcome! Have a great day." }
-];
+  
 
-function getBotReply(input) {
-  input = input.toLowerCase();
-  for (const pair of predefinedQA) {
-    if (pair.q.some(q => input.includes(q))) {
-      return pair.a;
-    }
-  }
-  return "Sorry, I can only help with basic questions about Raveendra Konda and this website.";
-}
-
-function sendToChatGPT() {
-  var query = document.getElementById('searchQuery').value.trim();
-  var responseDiv = document.getElementById('chatgpt-response');
-  if (query) {
-    const reply = getBotReply(query);
-    responseDiv.innerHTML = `<b>Bot:</b> ${reply}`;
-  }
-}
-</script>
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Raveendra Konda - Personal Website</title>
@@ -272,14 +245,76 @@ function sendToChatGPT() {
   };
   // ...inside your chatbot script, after collecting visitorDetails.reason:
 appendMessage("Bot", "Thank you for sharing your details. Click below to chat directly with me on WhatsApp.");
-const whatsappUrl = `https://api.whatsapp.com/send?phone=+447448565548&text=Hello,%20my%20name%20is%20${encodeURIComponent(visitorDetails.name)}.%20My%20contact:%20${encodeURIComponent(visitorDetails.contact)}.%20Reason:%20${encodeURIComponent(visitorDetails.reason)}`;
+///const whatsappUrl = `https://api.whatsapp.com/send?phone=+447448565548&text=Hello,%20my%20name%20is%20${encodeURIComponent(visitorDetails.name)}.%20My%20contact:%20${encodeURIComponent(visitorDetails.contact)}.%20Reason:%20${encodeURIComponent(visitorDetails.reason)}`;
+const whatsappUrl = `https://api.whatsapp.com/send?phone=+447448565548&text=Hello,%20my%20name%20is%20${encodeURIComponent(visitorDetails.name)}.%20My%20contact:%20${encodeURIComponent(visitorDetails.[...]
 const btn = document.createElement('div');
-btn.innerHTML = `<a href="${whatsappUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:#25D366;color:#fff;border-radius:5px;font-weight:bold;text-decoration:none;">Chat on WhatsApp</a>`;
+btn.innerHTML = `<a href="${whatsappUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:#25D366;color:#fff;border-radius:5px;font-weight:bold;text-decoration:[...]
 messagesDiv.appendChild(btn);
 chatbotStep = 4;
 </script>
 
-  
+  <script>
+// Use the same predefinedQA array from your chatbot script
+const predefinedQA = [
+  { q: ["who are you", "your name", "who is this"], a: "I'm a virtual assistant for Raveendra Konda's website." },
+  { q: ["contact", "email", "how to reach"], a: "You can contact Raveendra at <a href='mailto:raveendrakonda7@gmail.com'>raveendrakonda7@gmail.com</a>." },
+  { q: ["projects", "what projects", "show me projects"], a: "Raveendra has worked on DevOps Bootcamp (London) and Prompt Engineering Journey. Check the Projects section for more!" },
+  { q: ["linkedin"], a: "Here is Raveendra's LinkedIn: <a href='https://www.linkedin.com/in/raveendrakonda' target='_blank'>linkedin.com/in/raveendrakonda</a>" },
+  { q: ["bye", "goodbye", "thanks"], a: "You're welcome! Have a great day." }
+];
+
+function getBotReply(input) {
+  input = input.toLowerCase();
+  for (const pair of predefinedQA) {
+    if (pair.q.some(q => input.includes(q))) {
+      return pair.a;
+    }
+  }
+  return "Sorry, I can only help with basic questions about Raveendra Konda and this website.";
+}
+// ... (UI logic remains the same)
+
+form.onsubmit = function(e) {
+  e.preventDefault();
+  const userText = input.value.trim();
+  if (!userText) return;
+  appendMessage("You", userText);
+
+  setTimeout(() => {
+    if (chatbotStep === 1) {
+      visitorDetails.name = userText;
+      askNextVisitorDetail();
+    } else if (chatbotStep === 2) {
+      if (!/^[\d\-\+\s]{6,20}$/.test(userText)) {
+        appendMessage("Bot", "Please enter a valid contact number (digits, spaces, + or -).");
+        return;
+      }
+      visitorDetails.contact = userText;
+      askNextVisitorDetail();
+    } else if (chatbotStep === 3) {
+      visitorDetails.reason = userText;
+      appendMessage("Bot", "Thank you for sharing your details. Now you can ask me anything about Raveendra Konda or this website.");
+      // WhatsApp Button
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=+447448565548&text=Hello,%20my%20name%20is%20${encodeURIComponent(visitorDetails.name)}.%20My%20contact:%20${encodeURIComponent(visitorDetails.contact)}.%20I'm%20here%20because:%20${encodeURIComponent(visitorDetails.reason)}`;
+      const btn = document.createElement('div');
+      btn.innerHTML = `<a href="${whatsappUrl}" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 16px;background:#25D366;color:#fff;border-radius:5px;font-weight:bold;text-decoration:none;">Chat on WhatsApp</a>`;
+      messagesDiv.appendChild(btn);
+      chatbotStep = 4;
+    } else {
+      appendMessage("Bot", getBotReply(userText));
+    }
+  }, 400);
+  input.value = '';
+};
+function sendToChatGPT() {
+  var query = document.getElementById('searchQuery').value.trim();
+  var responseDiv = document.getElementById('chatgpt-response');
+  if (query) {
+    const reply = getBotReply(query);
+    responseDiv.innerHTML = `<b>Bot:</b> ${reply}`;
+  }
+}
+</script>
   
 </body>
 </html>
