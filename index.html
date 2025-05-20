@@ -5,6 +5,35 @@
   <button onclick="sendToChatGPT()">Search</button>
 </div>
 <div id="chatgpt-response"></div>
+  <script>
+// Use the same predefinedQA array from your chatbot script
+const predefinedQA = [
+  { q: ["who are you", "your name", "who is this"], a: "I'm a virtual assistant for Raveendra Konda's website." },
+  { q: ["contact", "email", "how to reach"], a: "You can contact Raveendra at <a href='mailto:raveendrakonda7@gmail.com'>raveendrakonda7@gmail.com</a>." },
+  { q: ["projects", "what projects", "show me projects"], a: "Raveendra has worked on DevOps Bootcamp (London) and Prompt Engineering Journey. Check the Projects section for more!" },
+  { q: ["linkedin"], a: "Here is Raveendra's LinkedIn: <a href='https://www.linkedin.com/in/raveendrakonda' target='_blank'>linkedin.com/in/raveendrakonda</a>" },
+  { q: ["bye", "goodbye", "thanks"], a: "You're welcome! Have a great day." }
+];
+
+function getBotReply(input) {
+  input = input.toLowerCase();
+  for (const pair of predefinedQA) {
+    if (pair.q.some(q => input.includes(q))) {
+      return pair.a;
+    }
+  }
+  return "Sorry, I can only help with basic questions about Raveendra Konda and this website.";
+}
+
+function sendToChatGPT() {
+  var query = document.getElementById('searchQuery').value.trim();
+  var responseDiv = document.getElementById('chatgpt-response');
+  if (query) {
+    const reply = getBotReply(query);
+    responseDiv.innerHTML = `<b>Bot:</b> ${reply}`;
+  }
+}
+</script>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
