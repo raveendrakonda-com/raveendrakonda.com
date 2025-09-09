@@ -10,8 +10,105 @@
     header { background: #222; color: #fff; padding: 40px 0; text-align: center; }
     header h1 { font-size: 2.5rem; }
     header p { font-size: 1.2rem; }
-    nav { text-align: center; background: #444; padding: 10px 0; }
-    nav a { color: #fff; margin: 0 15px; text-decoration: none; }
+    /* --- New Menu Bar Styles --- */
+    .menu-bar {
+      width: 100%;
+      background: #222;
+      z-index: 10001;
+      position: sticky;
+      top: 0;
+      left: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      font-size: 1rem;
+    }
+    .menu-bar nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .menu-bar ul {
+      list-style: none;
+      display: flex;
+      gap: 1px;
+      padding: 0;
+      margin: 0;
+    }
+    .menu-bar li {
+      position: relative;
+    }
+    .menu-bar > nav > ul > li > a, .menu-bar > nav > ul > li > button {
+      color: #fff;
+      background: none;
+      text-decoration: none;
+      padding: 16px 22px;
+      display: block;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .menu-bar > nav > ul > li > a:hover, .menu-bar > nav > ul > li > button:hover,
+    .menu-bar > nav > ul > li > a:focus, .menu-bar > nav > ul > li > button:focus {
+      background: #444;
+    }
+    /* Dropdown */
+    .menu-bar .dropdown,
+    .menu-bar .dropdown-resources {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 220px;
+      background: #fff;
+      color: #222;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      z-index: 1001;
+    }
+    .menu-bar li:hover > .dropdown, .menu-bar li:focus-within > .dropdown,
+    .menu-bar li:hover > .dropdown-resources, .menu-bar li:focus-within > .dropdown-resources {
+      display: block;
+      animation: fadeIn 0.18s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .menu-bar .dropdown a, .menu-bar .dropdown-resources a {
+      color: #222;
+      padding: 13px 18px;
+      display: block;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .menu-bar .dropdown a:hover, .menu-bar .dropdown a:focus,
+    .menu-bar .dropdown-resources a:hover, .menu-bar .dropdown-resources a:focus {
+      background: #f4f4f4;
+    }
+    /* Responsive menu */
+    @media (max-width: 850px) {
+      .menu-bar nav ul { flex-direction: column; background: #222; }
+      .menu-bar nav ul { display: none; }
+      .menu-bar nav.active ul { display: flex; }
+      .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 2rem;
+        margin: 8px 16px;
+        cursor: pointer;
+      }
+    }
+    @media (min-width: 851px) {
+      .menu-toggle { display: none; }
+    }
+    /* Old nav hidden */
+    nav.old-nav { display: none; }
     section { padding: 40px 20px; max-width: 900px; margin: auto; }
     h2 { margin-bottom: 20px; font-size: 2rem; color: #333; }
     .projects .project {
@@ -76,6 +173,41 @@
   </style>
 </head>
 <body>
+  <!-- New Top Menu Bar -->
+  <div class="menu-bar">
+    <nav id="main-menu">
+      <button class="menu-toggle" aria-label="Open menu" onclick="toggleMenu()">&#9776;</button>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li tabindex="0">
+          <button aria-haspopup="true" aria-expanded="false">About us ▾</button>
+          <div class="dropdown" role="menu" aria-label="About us submenu">
+            <a href="#our-mission">Our Mission and Vision</a>
+            <a href="#businesses">Businesses</a>
+            <a href="#priorities">Our Priorities</a>
+            <a href="#functions">Functions</a>
+            <a href="#leadership">Our Leadership</a>
+          </div>
+        </li>
+        <li tabindex="0">
+          <button aria-haspopup="true" aria-expanded="false">Resources ▾</button>
+          <div class="dropdown-resources" role="menu" aria-label="Resources submenu">
+            <a href="#ai">AI</a>
+            <a href="#prompt-engineering">Prompt Engineering</a>
+            <a href="#devops">DevOps</a>
+            <a href="#data-science">Data Science</a>
+            <a href="#cyber-security">Cyber Security</a>
+            <a href="#social-media">Social Media</a>
+          </div>
+        </li>
+        <li><a href="#news">News & Insights</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#blogs">Blogs</a></li>
+        <li><a href="#contact">Contact us</a></li>
+      </ul>
+    </nav>
+  </div>
+
   <!-- ChatGPT Search Bar (in body, not head) -->
   <div id="chatgpt-search">
     <input type="text" id="searchQuery" placeholder="Ask me anything..." aria-label="Ask me anything" />
@@ -89,7 +221,8 @@
     <p>Assistant Vice President | Ex - Goldman Sachs | Execution services | Trading support.</p>
   </header>
 
-  <nav>
+  <!-- Old nav hidden, replaced by menu bar -->
+  <nav class="old-nav">
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
@@ -138,6 +271,24 @@
   </div>
 
   <script>
+    // --- Responsive Menu Toggle ---
+    function toggleMenu() {
+      var nav = document.getElementById('main-menu');
+      nav.classList.toggle('active');
+    }
+    // Keyboard navigation for dropdowns
+    document.addEventListener('DOMContentLoaded', function() {
+      var dropdownButtons = document.querySelectorAll('.menu-bar nav > ul > li > button');
+      dropdownButtons.forEach(function(btn) {
+        btn.addEventListener('focus', function() {
+          btn.setAttribute('aria-expanded', 'true');
+        });
+        btn.addEventListener('blur', function() {
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+
     // Unified Q&A data
     const predefinedQA = [
       {
