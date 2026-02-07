@@ -1,42 +1,37 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
+const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Replace with your Gmail and an App Password (not your main password)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'YOUR_GMAIL_ADDRESS@gmail.com', // <-- replace with your Gmail
-    pass: 'YOUR_APP_PASSWORD'             // <-- replace with your Gmail app password
-  }
+// Existing email functionality
+app.post('/api/email', (req, res) => {
+    // Email functionality code goes here
 });
 
-app.post('/send-visitor-details', async (req, res) => {
-  const { name, contact, reason, searchQuery } = req.body;
-  const htmlContent = `
-    <h3>New Visitor Interaction</h3>
-    <p><strong>Name:</strong> ${name || 'N/A'}</p>
-    <p><strong>Contact:</strong> ${contact || 'N/A'}</p>
-    <p><strong>Reason:</strong> ${reason || 'N/A'}</p>
-    <p><strong>Search Query:</strong> ${searchQuery || 'N/A'}</p>
-  `;
-  try {
-    await transporter.sendMail({
-      from: '"Website Bot" <YOUR_GMAIL_ADDRESS@gmail.com>', // <-- replace
-      to: 'raveendrakonda7@gmail.com',
-      subject: 'New Visitor Interaction',
-      html: htmlContent
-    });
-    res.json({ success: true });
-  } catch (err) {
-    console.error('Email send error:', err);
-    res.status(500).json({ success: false, error: err.message });
-  }
+// New Ollama API Integration
+app.post('/api/chat', async (req, res) => {
+    const userMessage = req.body.message;
+    try {
+        const ollamaResponse = await fetch('http://localhost:11434/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        });
+        const data = await ollamaResponse.json();
+        return res.json({ response: data.reply });
+    } catch (error) {
+        console.error('Ollama API not available, using predefined responses.');
+        const predefinedResponses = {
+            'hello': 'Hi there! How can I help you?',
+            'how are you?': 'I am just a bot, but thanks for asking!'
+        };
+        return res.json({ response: predefinedResponses[userMessage.toLowerCase()] || 'I am unable to respond to that right now.' });
+    }
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
